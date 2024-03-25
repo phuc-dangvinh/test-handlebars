@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	{{!-- <link rel="stylesheet" href="/style/style.scss"> --}}
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <title>Document</title>
+  <style>
+    .conversation-history {
+      padding: 40px;
+      background-color: #fff;
+      margin: 0 auto;
+      width: 1000px;
+    }
+
+    .content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 40px;
+    }
+
+    .content-heading {
+      font-family: "Poppins" !important;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 48px;
+      color: #00aa9f;
+    }
+
+    .content-heading p {
+      margin: 0;
+    }
+
+    .content-sub-title {
+      font-weight: 600;
+      font-family: "Poppins" !important;
+      font-size: 14px;
+      line-height: 28px;
+      padding-right: 10px;
+      color: #646464;
+      text-align: right;
+      position: relative;
+    }
+
+    .content-sub-title::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: calc(100% - 20px);
+      background: #646464;
+    }
+
+    .content-sub-title p {
+      margin: 0;
+    }
+
+    .h-line {
+			width: 2px;
+			height: 20px;
+			background: #eaecf0;
+			border-radius: 4px;
+		}
+
+    .table-title {
+      font-family: "Work Sans" !important;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 0 16px;
+      font-size: 14px;
+      color: #969696;
+      align-items: center;
+    }
+
+    .table-content {
+      border: 1px solid #eaecf0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      table-layout: fixed;
+    }
+
+    table tbody {
+      font-family: "Work Sans" !important;
+      font-style: normal;
+      vertical-align: top;
+    }
+
+    table thead {
+      font-family: "Work Sans" !important;
+      font-style: normal;
+      vertical-align: top;
+    }
+
+    table tr th,
+    tr td {
+      color: #202020;
+    }
+
+    table tr th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 18px;
+      background: #f2f5f7;
+      padding: 4px 20px;
+    }
+
+    table tr td {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 16px 20px;
+    }
+
+    table tr:not(:last-child) {
+      border-bottom: 1px solid #eaecf0;
+    }
+
+    table .send-date {
+			width: 13%;
+		}
+		table .send-time {
+			width: 12%;
+		}
+		table .sender {
+			width: 15%;
+		}
+		table .msg-body {
+			width: 40%;
+      word-wrap: break-word;
+		}
+		table .attachments {
+			width: 20%;
+		}
+
+    table .files {
+      text-decoration: none;
+      margin: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      color: #202020;
+    }
+  </style>
+</head>
+
+<body>
+  {{!-- <div>{{data.templateTitle.messageTitle}}</div> --}}
+	<div class="pdf-template">
+  {{#with pdfTemplate}}
+    <div class="template-title">
+      {{#with templateTitle}}
+        <p>{{data.templateTitle.messageTitle}} - {{data.templateTitle.exportDate}}</p>
+        <p class="property">{{conversationProperty}}</p>
+        <p class="name">Trudi&reg; Conversation History</p>
+      {{/with}}
+    </div>
+    <table class="template-table" style="width: 100%;">
+      <thead>
+        <tr class="template-thead">
+          <th style="width: 10%;">Send date</th>
+          <th style="width: 9%;">Send time</th>
+          <th style="width: 18%;">Sender</th>
+          <th style="width: 21%;">Receiver</th>
+          <th style="width: 42%;">Message body</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each messages}}
+          <tr>
+            <td>{{date_format sendDate}}</td>
+            <td>{{time_format sendTime}}</td>
+            <td class="sender">
+              <div class="sender-name">{{fullname senderName}}</div>
+              <div class="sender-email">{{senderEmail}}</div>
+            </td>
+            <td class="receiver">
+              <div class="receiver-to">
+                {{#with receiverTo}}
+                  <p>to: </p>
+                  <div class="receiver-name">{{fullname receiverToName}}</div>
+                  <div class="receiver-email">&lt;{{receiverToEmail}}&gt;</div>
+                {{/with}}
+              </div>
+              <div class="receiver-cc">
+                {{#each receiverCc}}
+                  <p>cc: </p>
+                  <div class="receiver-name">{{ fullnamereceiverToName}}</div>
+                  <div class="receiver-email">&lt;{{receiverCcEmail}}&gt;</div>
+                {{/each}}
+              </div>
+              <div class="receiver-bcc">
+                {{#each receiverBcc}}
+                  <p>bcc: </p>
+                  <div class="receiver-name">{{receiverToName}}</div>
+                  <div class="receiver-email">&lt;{{receiverBccEmail}}&gt;</div>
+                {{/each}}
+              </div>
+            </td>
+            <td class="message-body">
+              <div class="message" style="{{#if @last}}padding-bottom: 0px;{{/if}}">{{messageBody}}</div>
+              <div class="attachment-name">
+                <p class="title">Attachment name:</p>
+                <div>
+                  {{#each attachmentName}}
+                    <a href="{{mediaLink}}" target="_blank" class="files"> {{name}} </a>
+                  {{/each}}
+                </div>
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/with}}
+</div>
+</body>
+
+</html>
